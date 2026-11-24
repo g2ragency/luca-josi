@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { useLayoutEffect, useRef, type CSSProperties } from "react";
 import { TransitionLink } from "@/components/PageTransition";
+import { ArrowCircle, Chip } from "@/components/ui";
 import { brano, ricordi } from "@/content/chi-sono";
 import { gsap, prefersReducedMotion, ScrollTrigger } from "@/lib/gsap";
 
@@ -159,7 +160,7 @@ export function Ricordi() {
         </div>
 
         <div className="flex items-center gap-1" aria-hidden="true">
-          <span className="rounded-[5px] bg-grey/87 px-[14px] py-[6px] text-grey-testi">1991</span>
+          <Chip>1991</Chip>
           <div ref={trackRef} className="relative flex h-[33px] w-[80px] items-center sm:w-[160px] md:w-[300px]">
             <div className="h-[14px] w-full bg-[repeating-linear-gradient(to_right,var(--color-grey)_0_1px,transparent_1px_4px)]" />
             <span
@@ -169,7 +170,7 @@ export function Ricordi() {
               {ricordi[0]?.anno ?? "Oggi"}
             </span>
           </div>
-          <span className="rounded-[5px] bg-grey/87 px-[14px] py-[6px] text-grey-testi">OGGI</span>
+          <Chip>OGGI</Chip>
         </div>
 
         <TransitionLink
@@ -178,10 +179,7 @@ export function Ricordi() {
           className="flex items-center gap-5 justify-self-end"
         >
           <span className="hidden lg:inline">Contatti</span>
-          <svg width="45" height="45" viewBox="0 0 45 45" fill="none" aria-hidden="true" className="shrink-0">
-            <circle cx="22.5" cy="22.5" r="22.5" fill="#DDDDDD" fillOpacity="0.866667" />
-            <path d="M19.5 14.5L27.5 22.5L19.5 30.5" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-          </svg>
+          <ArrowCircle />
         </TransitionLink>
       </div>
     </section>
