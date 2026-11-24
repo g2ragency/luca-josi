@@ -29,8 +29,10 @@ const Z_PAST = 700;
 const APPROACH = 1;
 const PASS = 0.35;
 const SPACING = 0.33;
+/** Punto dell'avvicinamento in cui la card è già nitida (0–1); resta nitida fino a metà uscita. */
+const SHARP_FROM = 0.8;
 /** Quanto si scorre (in altezze dello schermo) per passare da una card alla successiva. */
-const SCROLL_PER_CARD = 0.7;
+const SCROLL_PER_CARD = 0.9;
 
 /**
  * Sezione "ricordi" di Chi sono: si blocca sullo schermo mentre le card arrivano dal fondo
@@ -62,14 +64,16 @@ export function Ricordi() {
       cards.forEach((card, i) => {
         const at = i * SPACING;
         gsap.set(card, { xPercent: -50, yPercent: -50, z: Z_FAR, autoAlpha: 0, filter: "blur(16px)" });
-        // Si avvicina rallentando, ma diventa nitida solo nell'ultimo tratto: così a fuoco
-        // c'è una card per volta.
+        // Si avvicina rallentando e diventa nitida prima di arrivare a fuoco; resta nitida
+        // anche nella prima metà dell'uscita, poi si sfoca e sparisce oltre lo schermo.
+        const passHalf = at + APPROACH + PASS * 0.5;
         timeline
           .to(card, { z: 0, duration: APPROACH, ease: "power2.out" }, at)
-          .to(card, { filter: "blur(0px)", duration: APPROACH, ease: "power3.in" }, at)
+          .to(card, { filter: "blur(0px)", duration: APPROACH * SHARP_FROM, ease: "power1.in" }, at)
           .to(card, { autoAlpha: 1, duration: APPROACH * 0.35 }, at)
-          .to(card, { z: Z_PAST, filter: "blur(10px)", duration: PASS, ease: "power2.in" }, at + APPROACH)
-          .to(card, { autoAlpha: 0, duration: PASS * 0.6 }, at + APPROACH + PASS * 0.4);
+          .to(card, { z: Z_PAST, duration: PASS, ease: "power2.in" }, at + APPROACH)
+          .to(card, { filter: "blur(10px)", duration: PASS * 0.5, ease: "power1.in" }, passHalf)
+          .to(card, { autoAlpha: 0, duration: PASS * 0.5 }, passHalf);
       });
 
       const moveYear = gsap.quickSetter(year, "x", "px");
