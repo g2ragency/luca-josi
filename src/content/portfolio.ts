@@ -5,7 +5,7 @@
  * L'ordine dell'array è l'ordine nell'elenco e in "Progetto precedente/successivo".
  */
 
-export type FotoGalleria = { src?: string; alt: string };
+import type { FotoGalleria } from "@/content/comune";
 
 export type Progetto = {
   slug: string;
@@ -45,12 +45,3 @@ export function trovaProgetto(slug: string) {
   return progetti.find((progetto) => progetto.slug === slug);
 }
 
-/** Progetto precedente e successivo nell'elenco (ricomincia dall'inizio dopo l'ultimo). */
-export function viciniDi(slug: string) {
-  const i = progetti.findIndex((progetto) => progetto.slug === slug);
-  const n = progetti.length;
-  return {
-    precedente: progetti[(i - 1 + n) % n],
-    successivo: progetti[(i + 1) % n],
-  };
-}

@@ -20,32 +20,32 @@ function PlayIcon() {
 export function ProgettoHero({ immagine, video, titolo }: { immagine?: string; video?: string; titolo: string }) {
   const [riproduci, setRiproduci] = useState(false);
 
+  if (riproduci && video) {
+    return (
+      <video
+        src={video}
+        poster={immagine}
+        controls
+        autoPlay
+        playsInline
+        className="size-full rounded-[5px] bg-black object-cover"
+      />
+    );
+  }
+
   return (
-    <div className="relative mx-4 mt-16 aspect-[1344/758] md:mx-12 md:mt-[91px]">
-      {riproduci && video ? (
-        <video
-          src={video}
-          poster={immagine}
-          controls
-          autoPlay
-          playsInline
-          className="size-full rounded-[5px] bg-black object-cover"
-        />
-      ) : (
-        <>
-          <Media src={immagine} alt={titolo} sizes="100vw" priority className="h-full" />
-          {video && (
-            <button
-              type="button"
-              onClick={() => setRiproduci(true)}
-              aria-label={`Guarda il video: ${titolo}`}
-              className="absolute inset-0 flex items-center justify-center"
-            >
-              <PlayIcon />
-            </button>
-          )}
-        </>
+    <>
+      <Media src={immagine} alt={titolo} sizes="100vw" priority className="size-full" />
+      {video && (
+        <button
+          type="button"
+          onClick={() => setRiproduci(true)}
+          aria-label={`Guarda il video: ${titolo}`}
+          className="absolute inset-0 flex items-center justify-center"
+        >
+          <PlayIcon />
+        </button>
       )}
-    </div>
+    </>
   );
 }

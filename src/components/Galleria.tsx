@@ -2,7 +2,7 @@
 
 import { useEffect, useRef } from "react";
 import { Media } from "@/components/ui";
-import type { FotoGalleria } from "@/content/portfolio";
+import type { FotoGalleria } from "@/content/comune";
 import { gsap } from "@/lib/gsap";
 
 /** Quanto prosegue la galleria dopo aver lasciato il mouse, in proporzione alla velocità. */

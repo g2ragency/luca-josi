@@ -1,8 +1,7 @@
 "use client";
 
-import { useState } from "react";
-import { TransitionLink } from "@/components/PageTransition";
-import { Chip, Media } from "@/components/ui";
+import { ElencoVuoto, Filtri, useFiltro } from "@/components/Filtri";
+import { Scheda } from "@/components/Scheda";
 import type { Progetto } from "@/content/portfolio";
 
 type Formato = "larga" | "alta" | "piena";
@@ -36,67 +35,40 @@ const SIZES: Record<Formato, string> = {
   piena: "100vw",
 };
 
-function Scheda({ progetto, formato, priority }: { progetto: Progetto; formato: Formato; priority: boolean }) {
+function SchedaProgetto({ progetto, formato, priority }: { progetto: Progetto; formato: Formato; priority: boolean }) {
   return (
-    <article>
-      <TransitionLink href={`/portfolio/${progetto.slug}`} className="group block">
-        <Media
-          src={progetto.copertina}
-          alt={progetto.titolo}
-          sizes={SIZES[formato]}
-          priority={priority}
-          zoomOnHover
-          className={ASPETTO[formato]}
-        />
-        <p className="mt-3 text-body text-grey-testi">{progetto.cliente}</p>
-        <h2 className="mt-1 text-[24px] leading-[36px] font-semibold">{progetto.titolo}</h2>
-      </TransitionLink>
-      <ul className="mt-[5px] flex flex-wrap gap-2">
-        {progetto.categorie.map((categoria) => (
-          <li key={categoria}>
-            <Chip>{categoria}</Chip>
-          </li>
-        ))}
-      </ul>
-    </article>
+    <Scheda
+      href={`/portfolio/${progetto.slug}`}
+      immagine={progetto.copertina}
+      sopratitolo={progetto.cliente}
+      titolo={progetto.titolo}
+      etichette={progetto.categorie}
+      aspetto={ASPETTO[formato]}
+      sizes={SIZES[formato]}
+      priority={priority}
+    />
   );
 }
 
 export function PortfolioGrid({ progetti, categorie }: { progetti: Progetto[]; categorie: string[] }) {
-  const [attiva, setAttiva] = useState<string | null>(null);
-  // L'elenco si anima solo dopo un clic su un filtro, non all'arrivo sulla pagina.
-  const [filtrato, setFiltrato] = useState(false);
-
-  const visibili = attiva ? progetti.filter((progetto) => progetto.categorie.includes(attiva)) : progetti;
-  const righe = componiRighe(visibili);
+  const filtro = useFiltro(progetti, (progetto, categoria) => progetto.categorie.includes(categoria));
+  const righe = componiRighe(filtro.visibili);
 
   return (
     <>
-      <div role="group" aria-label="Filtra per categoria" className="mt-6 flex flex-wrap gap-6 px-4 md:mt-[17px] md:px-12">
-        {categorie.map((categoria) => (
-          <button
-            key={categoria}
-            type="button"
-            aria-pressed={attiva === categoria}
-            onClick={() => {
-              setFiltrato(true);
-              setAttiva((corrente) => (corrente === categoria ? null : categoria));
-            }}
-          >
-            <Chip scura={attiva === categoria}>{categoria}</Chip>
-          </button>
-        ))}
-      </div>
+      <Filtri
+        opzioni={categorie.map((categoria) => ({ valore: categoria, etichetta: categoria }))}
+        attivo={filtro.attivo}
+        onCambia={filtro.cambia}
+      />
 
       <div
-        key={attiva ?? "tutti"}
-        className={`mt-16 mb-20 flex flex-col gap-12 px-4 md:mt-[100px] md:mb-[110px] md:px-12 ${
-          filtrato ? "animate-fade-up" : ""
-        }`}
+        key={filtro.chiave}
+        className={`mt-16 mb-20 flex flex-col gap-12 px-4 md:mt-[100px] md:mb-[110px] md:px-12 ${filtro.animazione}`}
       >
         {righe.map((riga, r) =>
           riga.tipo === "piena" ? (
-            <Scheda key={riga.progetti[0].slug} progetto={riga.progetti[0]} formato="piena" priority={r === 0} />
+            <SchedaProgetto key={riga.progetti[0].slug} progetto={riga.progetti[0]} formato="piena" priority={r === 0} />
           ) : (
             <div
               key={riga.progetti[0].slug}
@@ -105,7 +77,7 @@ export function PortfolioGrid({ progetti, categorie }: { progetti: Progetto[]; c
               }`}
             >
               {riga.progetti.map((progetto, k) => (
-                <Scheda
+                <SchedaProgetto
                   key={progetto.slug}
                   progetto={progetto}
                   formato={(riga.tipo === "larga-alta") === (k === 0) ? "larga" : "alta"}
@@ -115,7 +87,7 @@ export function PortfolioGrid({ progetti, categorie }: { progetti: Progetto[]; c
             </div>
           ),
         )}
-        {visibili.length === 0 && <p className="text-body text-grey-testi">Nessun progetto in questa categoria.</p>}
+        {filtro.visibili.length === 0 && <ElencoVuoto />}
       </div>
     </>
   );
