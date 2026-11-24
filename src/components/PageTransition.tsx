@@ -12,7 +12,7 @@ import {
   type ComponentProps,
   type ReactNode,
 } from "react";
-import { gsap, prefersReducedMotion, prepareHeadingReveal } from "@/lib/gsap";
+import { gsap, prefersReducedMotion, prepareHeadingReveal, ScrollTrigger } from "@/lib/gsap";
 import { getLenis } from "@/lib/smooth-scroll";
 
 type TransitionContextValue = { navigate: (href: string) => void };
@@ -133,6 +133,9 @@ export function PageTransition({ children }: { children: ReactNode }) {
         () => {
           gsap.set(page, { clearProps: "all" });
           reset();
+          // Le animazioni legate allo scroll della nuova pagina si sono misurate mentre era
+          // ancora spostata e inclinata: ora che è al suo posto, ricalcolano le posizioni.
+          ScrollTrigger.refresh();
         },
         [],
         0.9,

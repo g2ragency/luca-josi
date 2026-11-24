@@ -1,5 +1,5 @@
 import Lenis from "lenis";
-import { gsap } from "@/lib/gsap";
+import { gsap, ScrollTrigger } from "@/lib/gsap";
 
 let lenis: Lenis | null = null;
 
@@ -12,6 +12,7 @@ export function getLenis() {
   if (typeof window === "undefined") return null;
   if (!lenis) {
     lenis = new Lenis({ lerp: 0.165, wheelMultiplier: 1.25 });
+    lenis.on("scroll", ScrollTrigger.update);
     gsap.ticker.add((time) => lenis?.raf(time * 1000));
     gsap.ticker.lagSmoothing(0);
   }

@@ -1,9 +1,10 @@
 import { gsap } from "gsap";
 import { CustomEase } from "gsap/CustomEase";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { SplitText } from "gsap/SplitText";
 
 if (typeof window !== "undefined") {
-  gsap.registerPlugin(CustomEase, SplitText);
+  gsap.registerPlugin(CustomEase, ScrollTrigger, SplitText);
   // Curva morbida usata per tutte le animazioni del sito: parte lenta, accelera e frena a lungo.
   CustomEase.create("osmo", "0.625, 0.05, 0, 1");
   gsap.defaults({ ease: "osmo", duration: 0.6 });
@@ -43,4 +44,4 @@ export function prepareHeadingReveal(root: ParentNode | null) {
   };
 }
 
-export { gsap };
+export { gsap, ScrollTrigger };
