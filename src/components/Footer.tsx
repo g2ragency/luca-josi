@@ -33,7 +33,16 @@ export function Footer() {
     mm.add("(prefers-reduced-motion: no-preference)", () => {
       gsap
         .timeline({
-          scrollTrigger: { trigger: root, start: "clamp(top bottom)", end: "clamp(top top)", scrub: true },
+          scrollTrigger: {
+            trigger: root,
+            start: "clamp(top bottom)",
+            end: "clamp(top top)",
+            scrub: true,
+            // Il footer resta montato tra le pagine, quindi è creato prima delle animazioni
+            // della pagina nuova: va ricalcolato per ultimo, dopo le sezioni bloccate (pin)
+            // che allungano la pagina (es. i ricordi di Chi sono), altrimenti parte troppo presto.
+            refreshPriority: -1,
+          },
         })
         .from("[data-footer-contenuto]", { yPercent: -75, ease: "none" })
         .from("[data-footer-velo]", { opacity: 0.5, ease: "none" }, "<");
