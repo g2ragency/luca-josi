@@ -29,6 +29,9 @@ export function prepareHeadingReveal(root: ParentNode | null) {
     SplitText.create(el, { type: "lines,words", mask: "lines" }),
   );
   const words = splits.flatMap((split) => split.words);
+  // Pagina senza titoli da animare (es. la home per ora): niente da fare, ed evita gli
+  // avvisi di GSAP sulle liste vuote.
+  if (words.length === 0) return { play: () => gsap.timeline() };
   gsap.set(words, { yPercent: 140, rotate: 5 });
 
   return {
