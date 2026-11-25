@@ -5,7 +5,7 @@ import type { ReactNode } from "react";
 export function Chip({ children, scura = false }: { children: ReactNode; scura?: boolean }) {
   return (
     <span
-      className={`inline-block rounded-[5px] px-[14px] py-[6px] text-button ${
+      className={`inline-flex items-center gap-2 rounded-[5px] px-[14px] py-[6px] text-button ${
         scura ? "bg-black text-white" : "bg-grey/87 text-grey-testi"
       }`}
     >

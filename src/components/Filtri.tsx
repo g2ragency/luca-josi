@@ -24,7 +24,19 @@ export function useFiltro<T>(elementi: T[], appartiene: (elemento: T, valore: st
   };
 }
 
-/** Etichette cliccabili sotto il titolo della pagina (nera quella attiva). */
+/** X bianca da 10px, entra con una leggera dissolvenza. */
+function IconaChiudi() {
+  return (
+    <svg width="10" height="10" viewBox="0 0 10 10" fill="none" aria-hidden="true" className="shrink-0 animate-fade-in">
+      <path d="M1 1L9 9M9 1L1 9" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+    </svg>
+  );
+}
+
+/**
+ * Etichette cliccabili sotto il titolo della pagina: quella scelta diventa nera con una X
+ * a destra; un clic sulla stessa etichetta toglie il filtro.
+ */
 export function Filtri({
   opzioni,
   attivo,
@@ -42,8 +54,13 @@ export function Filtri({
           type="button"
           aria-pressed={attivo === valore}
           onClick={() => onCambia(attivo === valore ? null : valore)}
+          className="cursor-pointer"
         >
-          <Chip scura={attivo === valore}>{etichetta}</Chip>
+          <Chip scura={attivo === valore}>
+            {etichetta}
+            {/* Sulla categoria scelta: la X a destra ricorda che un altro clic la toglie. */}
+            {attivo === valore && <IconaChiudi />}
+          </Chip>
         </button>
       ))}
     </div>
