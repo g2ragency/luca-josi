@@ -1,10 +1,11 @@
 import Image from "next/image";
 import { TransitionLink } from "@/components/PageTransition";
+import { classePulsante } from "@/components/ui";
 
 const links = [
   { href: "/chi-sono", label: "Chi sono" },
   { href: "/portfolio", label: "Portfolio" },
-  { href: "/libri", label: "Libri" },
+  { href: "/libri", label: "Pubblicazioni" },
   { href: "/articoli", label: "Articoli" },
 ];
 
@@ -26,7 +27,7 @@ export function Header() {
 
       <TransitionLink
         href="/contatti"
-        className="col-start-3 justify-self-end rounded-[5px] bg-grey/87 px-7 py-3"
+        className={`col-start-3 justify-self-end ${classePulsante}`}
       >
         Contatti
       </TransitionLink>

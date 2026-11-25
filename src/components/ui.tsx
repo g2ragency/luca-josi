@@ -14,6 +14,9 @@ export function Chip({ children, scura = false }: { children: ReactNode; scura?:
   );
 }
 
+/** Pulsante grigio alto 45px (Contatti, "Leggi di più", "Scopri di più"): classi da mettere sul link. */
+export const classePulsante = "inline-block rounded-[5px] bg-grey/87 px-7 py-3 text-button";
+
 /** Cerchio grigio con freccia (Figma: 45×45), verso destra o sinistra. */
 export function ArrowCircle({ direzione = "destra" }: { direzione?: "destra" | "sinistra" }) {
   return (

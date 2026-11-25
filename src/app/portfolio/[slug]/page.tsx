@@ -34,9 +34,9 @@ export default async function Progetto({ params }: Props) {
       descrizioneTitolo={progetto.descrizioneTitolo}
       descrizione={progetto.descrizione}
       galleria={progetto.galleria}
-      voce="Progetto"
-      precedente={{ href: `/portfolio/${precedente.slug}`, titolo: precedente.titolo }}
-      successivo={{ href: `/portfolio/${successivo.slug}`, titolo: successivo.titolo }}
+      navigazione="Altri progetti"
+      precedente={{ href: `/portfolio/${precedente.slug}`, titolo: precedente.titolo, testo: "Progetto precedente" }}
+      successivo={{ href: `/portfolio/${successivo.slug}`, titolo: successivo.titolo, testo: "Progetto successivo" }}
     />
   );
 }
