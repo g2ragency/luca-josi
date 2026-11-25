@@ -26,10 +26,10 @@ export default function Contatti() {
           <p className="font-semibold">Seguimi</p>
           {linkedin ? (
             <a href={linkedin} target="_blank" rel="noreferrer" className="mt-[2px] block">
-              Linkedin
+              LinkedIn
             </a>
           ) : (
-            <p className="mt-[2px]">Linkedin</p>
+            <p className="mt-[2px]">LinkedIn</p>
           )}
         </li>
         <li>

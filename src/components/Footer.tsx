@@ -95,10 +95,10 @@ export function Footer() {
               <li>
                 {linkedin ? (
                   <a href={linkedin} target="_blank" rel="noreferrer">
-                    Linkedin
+                    LinkedIn
                   </a>
                 ) : (
-                  "Linkedin"
+                  "LinkedIn"
                 )}
               </li>
             </Colonna>

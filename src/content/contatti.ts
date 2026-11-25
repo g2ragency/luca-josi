@@ -1,6 +1,6 @@
 /**
  * Contatti, link del footer e foto della newsletter.
- * DA COMPLETARE: indirizzo del profilo LinkedIn (finché è `null` "Linkedin" resta testo
+ * DA COMPLETARE: indirizzo del profilo LinkedIn (finché è `null` "LinkedIn" resta testo
  * senza link), pagine legali (privacy, cookie, termini: non esistono ancora) e foto vere
  * della fila nella sezione newsletter (aggiungere `src`).
  */
