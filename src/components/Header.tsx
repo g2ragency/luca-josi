@@ -26,7 +26,8 @@ const PAD_DX = 6;
 /**
  * Navbar fissa in alto. In cima alla pagina: logo esteso a sinistra, menu al centro,
  * Contatti a destra. Appena si scorre (come su symbolstudio.pl) logo e Contatti scivolano
- * verso il centro e dietro compare una pillola bianca che li raccoglie con il menu; il logo
+ * verso il centro e dietro compare una pillola nera che li raccoglie con il menu (logo e
+ * menu diventano bianchi, Contatti grigio scuro per staccarsi dal nero); il logo
  * intanto si stringe nelle iniziali "LJ" ("uca" e "osi" svaniscono e la J raggiunge la L).
  * Tornando in cima si riapre. Le voci del menu hanno la stessa animazione dei pulsanti
  * (scritta che rotola), senza sfondo.
@@ -48,6 +49,11 @@ export function Header() {
     if (!logo || !menu || !contatti || !pillola) return;
 
     let compatta = false;
+    /** I colori "chiari su nero" (data-compatta) tornano scuri solo a pillola quasi svanita. */
+    let ritornoColori: gsap.core.Tween | undefined;
+    const colori = (scuri: boolean) => {
+      root.dataset.compatta = scuri ? "true" : "false";
+    };
     const fermo = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
     /** Posizione a riposo (senza spostamenti) di un elemento, in px dal bordo sinistro. */
@@ -85,6 +91,8 @@ export function Header() {
     const durata = fermo ? 0 : 0.8;
 
     const raccogli = (subito = false) => {
+      ritornoColori?.kill();
+      colori(true);
       const m = misure();
       const d = subito ? 0 : durata;
       gsap.to(logo, { x: m.logo, duration: d, overwrite: true });
@@ -109,6 +117,7 @@ export function Header() {
       const m = misure();
       gsap.to(pillola, { ...m.pillolaAperta, duration: durata, overwrite: true });
       gsap.to(pillola, { autoAlpha: 0, duration: durata * 0.35, delay: durata * 0.65, overwrite: false });
+      ritornoColori = gsap.delayedCall(durata * 0.6, () => colori(false));
       compatta = false;
     };
 
@@ -127,6 +136,7 @@ export function Header() {
     window.addEventListener("resize", ridimensiona);
 
     return () => {
+      ritornoColori?.kill();
       trigger.kill();
       window.removeEventListener("resize", ridimensiona);
       gsap.killTweensOf([logo, menu, contatti, pillola, ...uca, ...osi, ...j]);
@@ -134,25 +144,33 @@ export function Header() {
   }, []);
 
   return (
-    <header ref={rootRef} className="pointer-events-none fixed inset-x-0 top-0 z-50 px-4 pt-[15px] text-button md:px-12">
-      {/* Pillola bianca della navbar raccolta (Contatti dentro, con 6px di margine). */}
+    <header
+      ref={rootRef}
+      data-compatta="false"
+      className="group/nav pointer-events-none fixed inset-x-0 top-0 z-50 px-4 pt-[15px] text-button md:px-12"
+    >
+      {/* Pillola nera della navbar raccolta (Contatti dentro, con 6px di margine). */}
       <div
         data-nav-pillola
         aria-hidden="true"
-        className="invisible absolute top-[9px] left-0 h-[57px] rounded-[10px] bg-white opacity-0 shadow-[0_8px_30px_rgb(0_0_0/0.08)] ring-1 ring-black/5"
+        className="invisible absolute top-[9px] left-0 h-[57px] rounded-[10px] bg-black opacity-0 shadow-[0_8px_30px_rgb(0_0_0/0.12)]"
       />
       <div className="relative grid grid-cols-[1fr_auto_1fr] items-center">
         <TransitionLink
           data-nav-logo
           href="/"
           aria-label="Luca Josi, home"
-          className="pointer-events-auto justify-self-start"
+          className="pointer-events-auto justify-self-start transition-colors duration-500 group-data-[compatta=true]/nav:text-white"
         >
           <LogoLucaJosi className="block h-auto w-[130px]" />
         </TransitionLink>
 
         {/* La versione mobile del menu non è ancora disegnata: per ora sotto i 768px restano logo e Contatti. */}
-        <nav data-nav-menu aria-label="Principale" className="pointer-events-auto hidden items-center gap-12 md:flex">
+        <nav
+          data-nav-menu
+          aria-label="Principale"
+          className="pointer-events-auto hidden items-center gap-12 transition-colors duration-500 group-data-[compatta=true]/nav:text-white md:flex"
+        >
           {links.map((link) => (
             <TransitionLink key={link.href} href={link.href} className="group/pulsante block">
               <TestoPulsante>{link.label}</TestoPulsante>
@@ -163,7 +181,7 @@ export function Header() {
         <TransitionLink
           data-nav-contatti
           href="/contatti"
-          className={`pointer-events-auto col-start-3 justify-self-end ${classePulsante}`}
+          className={`pointer-events-auto col-start-3 justify-self-end ${classePulsante} group-data-[compatta=true]/nav:bg-grey-scuro group-data-[compatta=true]/nav:hover:bg-[#4d4d4d]`}
         >
           <TestoPulsante>Contatti</TestoPulsante>
         </TransitionLink>
