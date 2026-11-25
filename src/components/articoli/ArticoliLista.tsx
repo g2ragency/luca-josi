@@ -2,7 +2,7 @@
 
 import { useLayoutEffect, useRef } from "react";
 import { TransitionLink } from "@/components/PageTransition";
-import { classePulsante } from "@/components/ui";
+import { classePulsante, TestoPulsante } from "@/components/ui";
 import type { Articolo } from "@/content/articoli";
 import { gsap, ScrollTrigger } from "@/lib/gsap";
 
@@ -48,7 +48,7 @@ function Riga({ articolo }: { articolo: Articolo }) {
             tabIndex={-1}
             className={`mt-[10px] ${classePulsante}`}
           >
-            Leggi di più
+            <TestoPulsante>Leggi di più</TestoPulsante>
           </TransitionLink>
         </div>
         <p data-estratto className="line-clamp-8 text-body text-grey-testi md:mt-[30px]">
@@ -73,7 +73,7 @@ function Riga({ articolo }: { articolo: Articolo }) {
         tabIndex={-1}
         className={`invisible absolute top-[30px] right-0 opacity-0 ${classePulsante}`}
       >
-        Leggi di più
+        <TestoPulsante>Leggi di più</TestoPulsante>
       </TransitionLink>
     </li>
   );

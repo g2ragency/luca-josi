@@ -1,5 +1,5 @@
 import { TransitionLink } from "@/components/PageTransition";
-import { Chip, classePulsante, Media } from "@/components/ui";
+import { Chip, classePulsante, Media, TestoPulsante } from "@/components/ui";
 
 /**
  * Scheda degli elenchi: immagine che si ingrandisce al passaggio, sopratitolo grigio
@@ -50,7 +50,11 @@ export function Scheda({
         </div>
         <p className={`text-body text-grey-testi ${pulsante ? "mt-[17px]" : "mt-3"}`}>{sopratitolo}</p>
         <h2 className="mt-1 text-h5">{titolo}</h2>
-        {pulsante && <span className={`mt-[14px] ${classePulsante}`}>{pulsante}</span>}
+        {pulsante && (
+          <span className={`mt-[14px] ${classePulsante}`}>
+            <TestoPulsante>{pulsante}</TestoPulsante>
+          </span>
+        )}
       </TransitionLink>
       {!pulsante && elencoEtichette("mt-[5px]")}
     </article>

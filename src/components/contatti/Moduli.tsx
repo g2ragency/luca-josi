@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, type FormEvent } from "react";
-import { classePulsante } from "@/components/ui";
+import { classePulsante, TestoPulsante } from "@/components/ui";
 
 /**
  * I due moduli della pagina Contatti. L'invio NON è ancora collegato a un servizio
@@ -65,8 +65,8 @@ export function ModuloContatti() {
         />
       </label>
       <div className="col-span-2 -mt-[22px]">
-        <button type="submit" className={`cursor-pointer ${classePulsante}`}>
-          Invia messaggio
+        <button type="submit" className={classePulsante}>
+          <TestoPulsante>Invia messaggio</TestoPulsante>
         </button>
         {avviso && (
           <p role="status" className="mt-3 text-button font-normal text-grey-testi">
@@ -95,8 +95,8 @@ export function ModuloNewsletter() {
         <input name="email" type="email" required autoComplete="email" placeholder="E-mail*" className={classeCampo} />
       </label>
       <div>
-        <button type="submit" className="h-[45px] w-full cursor-pointer rounded-[5px] bg-black text-button text-white">
-          Iscriviti alla newsletter
+        <button type="submit" className={`w-full text-center ${classePulsante}`}>
+          <TestoPulsante>Iscriviti alla newsletter</TestoPulsante>
         </button>
         <p className="mt-[14px] text-button font-normal">
           Cliccando “iscriviti alla newsletter” autorizzi il trattamento dei dati come da Termini e Condizioni

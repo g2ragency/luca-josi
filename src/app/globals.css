@@ -6,6 +6,8 @@
   --color-white: #ffffff;
   --color-grey: #dddddd;
   --color-grey-testi: #777777;
+  /* Sfondo dei pulsanti al passaggio del mouse. */
+  --color-grey-scuro: #333333;
 
   --text-h1: clamp(2.25rem, 4.45vw, 4rem);
   --text-h1--line-height: 1.0625;
