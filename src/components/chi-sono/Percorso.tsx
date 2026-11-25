@@ -2,9 +2,9 @@ import { Chip } from "@/components/ui";
 import { percorso } from "@/content/chi-sono";
 
 /** Le quattro tappe della carriera sotto il titolo di Chi sono. */
-export function Percorso() {
+export function Percorso({ className = "" }: { className?: string }) {
   return (
-    <ol className="mt-16 grid gap-x-6 gap-y-10 px-4 sm:grid-cols-2 md:mt-[100px] md:px-12 lg:grid-cols-4">
+    <ol className={`grid gap-x-6 gap-y-10 px-4 sm:grid-cols-2 md:px-12 lg:grid-cols-4 ${className}`}>
       {percorso.map((tappa) => (
         <li key={tappa.periodo}>
           <Chip scura>{tappa.periodo}</Chip>

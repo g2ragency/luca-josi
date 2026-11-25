@@ -26,8 +26,9 @@ const SEZIONE = "mt-24 md:mt-[150px]";
 export default function Home() {
   return (
     <>
-      {/* Apertura: riquadro grigio chiaro alto 700px (per ora senza foto o video) con il titolo in basso. */}
-      <section className="flex h-[min(700px,85svh)] items-end bg-grey-chiaro md:h-[700px]">
+      {/* Apertura: riquadro grigio chiaro alto quanto lo schermo (per ora senza foto o video)
+          con il titolo in basso; mai più basso di 560px, perché il titolo ci stia. */}
+      <section className="flex h-svh min-h-[560px] items-end bg-grey-chiaro">
         <h1 data-reveal="heading" className="px-4 pb-6 text-h1 uppercase md:px-12 md:pb-[31px]">
           {titoloApertura}
         </h1>
