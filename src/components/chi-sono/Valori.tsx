@@ -27,7 +27,11 @@ function Contenuto({ valore, numero }: { valore: Valore; numero: number }) {
       <span className="absolute top-6 right-0 text-button">{numero}</span>
       <div data-content className="grid gap-6 md:grid-cols-2">
         <div>
-          <p className="text-button uppercase">{valore.etichetta}</p>
+          {/* Pallino grigio da 7px e testo 16px più a destra (Figma). */}
+          <p className="flex items-center gap-[9px] text-button">
+            <span aria-hidden="true" className="size-[7px] shrink-0 rounded-full bg-grey" />
+            {valore.etichetta}
+          </p>
           <h3 className="mt-6 max-w-[432px] text-h4 md:mt-[34px]">{valore.titolo}</h3>
         </div>
         <p className="text-body text-grey-testi md:mt-[50px]">{valore.testo}</p>

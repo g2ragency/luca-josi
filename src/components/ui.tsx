@@ -14,10 +14,16 @@ export function Chip({ children, scura = false }: { children: ReactNode; scura?:
   );
 }
 
-/** Pulsante grigio alto 45px (Contatti, "Leggi di più", "Scopri di più"): classi da mettere sul link. */
+/** Pulsante grigio alto 45px ("Leggi di più", "Scopri di più", "Invia messaggio"): classi da mettere sul link. */
 export const classePulsante = "inline-block rounded-[5px] bg-grey/87 px-7 py-3 text-button";
 
-/** Cerchio grigio con freccia (Figma: 45×45), verso destra o sinistra. */
+/** Lo stesso pulsante, nero con testo bianco (Contatti nell'header). */
+export const classePulsanteScuro = "inline-block rounded-[5px] bg-black px-7 py-3 text-button text-white";
+
+/**
+ * Cerchio grigio con freccia (Figma: 45×45), verso destra o sinistra. Diventa nero con la
+ * freccia bianca quando si passa sul link che lo contiene (il link deve avere `group`).
+ */
 export function ArrowCircle({ direzione = "destra" }: { direzione?: "destra" | "sinistra" }) {
   return (
     <svg
@@ -28,10 +34,15 @@ export function ArrowCircle({ direzione = "destra" }: { direzione?: "destra" | "
       aria-hidden="true"
       className={`shrink-0 ${direzione === "sinistra" ? "-scale-x-100" : ""}`}
     >
-      <circle cx="22.5" cy="22.5" r="22.5" fill="#DDDDDD" fillOpacity="0.866667" />
+      <circle
+        cx="22.5"
+        cy="22.5"
+        r="22.5"
+        className="fill-grey/87 transition-colors duration-300 group-hover:fill-black"
+      />
       <path
         d="M19.5 14.5L27.5 22.5L19.5 30.5"
-        stroke="black"
+        className="stroke-black transition-colors duration-300 group-hover:stroke-white"
         strokeWidth="1.5"
         strokeLinecap="round"
         strokeLinejoin="round"

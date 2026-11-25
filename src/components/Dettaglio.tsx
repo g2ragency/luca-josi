@@ -56,14 +56,14 @@ export function NavVicini({
       aria-label={etichetta}
       className={`mt-16 mb-20 flex items-center justify-between gap-6 px-4 text-[18px] leading-[28px] font-semibold md:mb-[100px] md:px-12 ${margine}`}
     >
-      <TransitionLink href={precedente.href} className="flex items-center gap-3">
+      <TransitionLink href={precedente.href} className="group flex items-center gap-3">
         <ArrowCircle direzione="sinistra" />
         <span>
           {precedente.testo}
           <span className="sr-only">: {precedente.titolo}</span>
         </span>
       </TransitionLink>
-      <TransitionLink href={successivo.href} className="flex items-center gap-3 text-right">
+      <TransitionLink href={successivo.href} className="group flex items-center gap-3 text-right">
         <span>
           {successivo.testo}
           <span className="sr-only">: {successivo.titolo}</span>

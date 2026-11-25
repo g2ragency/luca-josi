@@ -1,6 +1,6 @@
 import Image from "next/image";
 import { TransitionLink } from "@/components/PageTransition";
-import { classePulsante } from "@/components/ui";
+import { classePulsanteScuro } from "@/components/ui";
 
 const links = [
   { href: "/chi-sono", label: "Chi sono" },
@@ -27,7 +27,7 @@ export function Header() {
 
       <TransitionLink
         href="/contatti"
-        className={`col-start-3 justify-self-end ${classePulsante}`}
+        className={`col-start-3 justify-self-end ${classePulsanteScuro}`}
       >
         Contatti
       </TransitionLink>

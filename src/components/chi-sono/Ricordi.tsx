@@ -176,7 +176,7 @@ export function Ricordi() {
         <TransitionLink
           href="/contatti"
           aria-label="Contatti"
-          className="flex items-center gap-5 justify-self-end"
+          className="group flex items-center gap-5 justify-self-end"
         >
           <span className="hidden lg:inline">Contatti</span>
           <ArrowCircle />

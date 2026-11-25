@@ -25,6 +25,16 @@ export const categorie = ["Categoria 1", "Categoria 2", "Categoria 3", "Categori
 const descrizione =
   "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. Integer tincidunt. Cras dapibus. Vivamus elementum semper nisi. Aenean vulputate eleifend tellus. Aenean leo ligula, porttitor eu, consequat";
 
+/** Foto del primo progetto: sono quelle messe dal grafico nel frame PORTFOLIO INTERNO di Figma. */
+const fotoProgettoUno = {
+  hero: "/portfolio/progetto-uno/hero.jpg",
+  galleria: [
+    { src: "/portfolio/progetto-uno/galleria-1.jpg", alt: "Il padiglione con i robot schierati, visto dall'alto" },
+    { src: "/portfolio/progetto-uno/galleria-2.jpg", alt: "Un uomo con un certificato in mano tra i robot" },
+    { src: "/portfolio/progetto-uno/galleria-3.jpg", alt: "Robot in preparazione su un tavolo da lavoro" },
+  ],
+};
+
 const numeri = [
   "uno", "due", "tre", "quattro", "cinque", "sei",
   "sette", "otto", "nove", "dieci", "undici", "dodici",
@@ -39,6 +49,7 @@ export const progetti: Progetto[] = numeri.map((numero, i) => ({
   descrizioneTitolo: "Titolo della descrizione",
   descrizione,
   galleria: Array.from({ length: 5 }, (_, k) => ({ alt: `Foto ${k + 1} del progetto ${numero}` })),
+  ...(i === 0 ? fotoProgettoUno : {}),
 }));
 
 export function trovaProgetto(slug: string) {
