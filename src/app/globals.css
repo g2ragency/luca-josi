@@ -24,7 +24,7 @@
   --text-button: 0.875rem;
   /* In Figma i testi a 14px sono alti 21px (etichette 33px, pulsante Contatti 45px). */
   --text-button--line-height: 1.5;
-  --text-button--font-weight: 600;
+  --text-button--font-weight: 700;
 
   /* Comparsa morbida dell'elenco progetti quando si cambia filtro. */
   --animate-fade-up: fade-up 0.7s cubic-bezier(0.625, 0.05, 0, 1) both;

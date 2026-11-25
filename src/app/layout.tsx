@@ -14,6 +14,7 @@ const bdoGrotesk = localFont({
   src: [
     { path: "./fonts/BDOGrotesk-Regular.woff2", weight: "400", style: "normal" },
     { path: "./fonts/BDOGrotesk-DemiBold.woff2", weight: "600", style: "normal" },
+    { path: "./fonts/BDOGrotesk-Bold.woff2", weight: "700", style: "normal" },
   ],
   variable: "--font-bdo-grotesk",
   display: "swap",
