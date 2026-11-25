@@ -104,11 +104,11 @@ export function Loader() {
       className="fixed inset-0 z-[100] flex items-center justify-center bg-black"
     >
       {/* viewBox ritagliato sui tratti della tavola 1920×1080 di Illustrator, più 5 di margine
-          per lo spessore del tratto (10). Larga 212px come la firma precedente. */}
+          per lo spessore del tratto (10). Larga 280px (su schermi stretti al massimo metà schermo). */}
       <svg
         ref={signatureRef}
-        width="212"
-        height="141.3"
+        width="280"
+        height="186.7"
         viewBox="501 234 918 612"
         fill="none"
         overflow="visible"
