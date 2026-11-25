@@ -21,7 +21,10 @@ export default function ChiSono() {
         <Ricordi />
       </div>
 
-      <p className="mt-20 max-w-[1098px] px-4 text-[clamp(2rem,3.75vw,3.375rem)] leading-[1.11] font-semibold md:mt-[99px] md:px-12">
+      <p
+        data-colore-scorrimento
+        className="mt-20 max-w-[1098px] px-4 text-[clamp(2rem,3.75vw,3.375rem)] leading-[1.11] font-semibold md:mt-[99px] md:px-12"
+      >
         {introduzione}
       </p>
 

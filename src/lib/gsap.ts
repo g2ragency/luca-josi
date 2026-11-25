@@ -18,29 +18,36 @@ export function prefersReducedMotion() {
 }
 
 /**
- * Prepara i titoli con `data-reveal="heading"` dentro `root`: li divide in parole
- * e le nasconde sotto la riga. `play()` le fa salire una dopo l'altra.
+ * Prepara i titoli h1 con `data-reveal="heading"` dentro `root`: li divide in lettere e le
+ * nasconde "coricate" all'indietro sotto la riga. `play()` le ribalta in piedi una dopo
+ * l'altra, in 3D, come le palette di un tabellone, con una frenata lunga. Le parole restano
+ * intere (niente a capo a metà parola) e la durata totale non dipende dalla lunghezza.
  */
 export function prepareHeadingReveal(root: ParentNode | null) {
   const headings = root
     ? Array.from(root.querySelectorAll<HTMLElement>('[data-reveal="heading"]'))
     : [];
-  const splits = headings.map((el) =>
-    SplitText.create(el, { type: "lines,words", mask: "lines" }),
-  );
-  const words = splits.flatMap((split) => split.words);
-  // Pagina senza titoli da animare (es. la home per ora): niente da fare, ed evita gli
-  // avvisi di GSAP sulle liste vuote.
-  if (words.length === 0) return { play: () => gsap.timeline() };
-  gsap.set(words, { yPercent: 140, rotate: 5 });
+  const splits = headings.map((el) => SplitText.create(el, { type: "words,chars" }));
+  const chars = splits.flatMap((split) => split.chars);
+  // Pagina senza titoli da animare: niente da fare, ed evita gli avvisi di GSAP sulle liste vuote.
+  if (chars.length === 0) return { play: () => gsap.timeline() };
+  gsap.set(chars, {
+    yPercent: 45,
+    rotationX: -100,
+    opacity: 0,
+    transformOrigin: "50% 100%",
+    transformPerspective: 700,
+  });
 
   return {
     play() {
-      return gsap.to(words, {
+      return gsap.to(chars, {
         yPercent: 0,
-        rotate: 0,
-        duration: 0.7,
-        stagger: 0.03,
+        rotationX: 0,
+        opacity: 1,
+        duration: 1.1,
+        ease: "expo.out",
+        stagger: { amount: 0.7 },
         onComplete: () => splits.forEach((split) => split.revert()),
       });
     },

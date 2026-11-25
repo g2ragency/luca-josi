@@ -46,7 +46,7 @@ export function Scheda({
       <TransitionLink href={href} className="group block">
         <div className="relative">
           <Media src={immagine} alt={titolo} sizes={sizes} priority={priority} zoomOnHover className={aspetto} />
-          {pulsante && elencoEtichette("absolute top-[10px] left-[10px]")}
+          {pulsante && etichette.length > 0 && elencoEtichette("absolute top-[10px] left-[10px]")}
         </div>
         <p className={`text-body text-grey-testi ${pulsante ? "mt-[17px]" : "mt-3"}`}>{sopratitolo}</p>
         <h2 className="mt-1 text-h5">{titolo}</h2>
@@ -56,7 +56,7 @@ export function Scheda({
           </span>
         )}
       </TransitionLink>
-      {!pulsante && elencoEtichette("mt-[5px]")}
+      {!pulsante && etichette.length > 0 && elencoEtichette("mt-[5px]")}
     </article>
   );
 }

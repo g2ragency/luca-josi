@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
+import { EffettiScroll } from "@/components/EffettiScroll";
 import { Footer } from "@/components/Footer";
 import { Header } from "@/components/Header";
 import { Loader } from "@/components/Loader";
@@ -46,6 +47,7 @@ export default function RootLayout({
           <Header />
           <main className="flex-1">{children}</main>
           <Footer />
+          <EffettiScroll />
         </PageTransition>
       </body>
     </html>

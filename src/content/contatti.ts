@@ -9,6 +9,8 @@ export const email = "info@lucajosi.it";
 
 export const linkedin: string | null = null;
 
+export const titoloNewsletter = "Titolo della sezione per iscriversi alla newsletter di Luca Josi";
+
 /** Foto quadrate che scorrono nella sezione newsletter (Figma: 204×204). */
 export const fotoNewsletter: { src?: string; alt: string }[] = Array.from({ length: 8 }, (_, i) => ({
   alt: `Foto ${i + 1} di Luca Josi`,

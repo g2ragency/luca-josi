@@ -14,6 +14,16 @@ export function Chip({ children, scura = false }: { children: ReactNode; scura?:
   );
 }
 
+/** Etichetta di sezione con il pallino grigio da 7px davanti (Figma: testo 16px più a destra). */
+export function Etichetta({ children, className = "" }: { children: ReactNode; className?: string }) {
+  return (
+    <p className={`flex items-center gap-[9px] text-button ${className}`}>
+      <span aria-hidden="true" className="size-[7px] shrink-0 rounded-full bg-grey" />
+      {children}
+    </p>
+  );
+}
+
 /**
  * Pulsante alto 45px, nero con testo bianco, grigio scuro al passaggio del mouse
  * (Contatti, "Leggi di più", "Scopri di più", moduli). Classi da mettere sul link o sul
@@ -95,6 +105,7 @@ export function Media({
   priority = false,
   className = "",
   zoomOnHover = false,
+  parallasse = true,
 }: {
   src?: string;
   alt: string;
@@ -102,22 +113,29 @@ export function Media({
   priority?: boolean;
   className?: string;
   zoomOnHover?: boolean;
+  /** L'immagine scorre nel riquadro più lenta della pagina (vedi EffettiScroll). */
+  parallasse?: boolean;
 }) {
   return (
-    <div className={`relative overflow-hidden rounded-[5px] bg-grey/87 ${className}`}>
+    <div
+      data-parallasse={src && parallasse ? "" : undefined}
+      className={`relative overflow-hidden rounded-[5px] bg-grey/87 ${className}`}
+    >
       {src ? (
-        <Image
-          src={src}
-          alt={alt}
-          fill
-          sizes={sizes}
-          priority={priority}
-          className={`object-cover ${
-            zoomOnHover
-              ? "transition-transform duration-700 ease-[cubic-bezier(0.625,0.05,0,1)] group-hover:scale-[1.03]"
-              : ""
-          }`}
-        />
+        <div data-parallasse-img className="absolute inset-0">
+          <Image
+            src={src}
+            alt={alt}
+            fill
+            sizes={sizes}
+            priority={priority}
+            className={`object-cover ${
+              zoomOnHover
+                ? "transition-transform duration-700 ease-[cubic-bezier(0.625,0.05,0,1)] group-hover:scale-[1.03]"
+                : ""
+            }`}
+          />
+        </div>
       ) : null}
     </div>
   );

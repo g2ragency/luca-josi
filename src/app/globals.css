@@ -8,6 +8,8 @@
   --color-grey-testi: #777777;
   /* Sfondo dei pulsanti al passaggio del mouse. */
   --color-grey-scuro: #333333;
+  /* "Light Grey" di Figma: apertura della home, riquadri dei loghi, righe al passaggio. */
+  --color-grey-chiaro: #eeeeee;
 
   --text-h1: clamp(2.25rem, 4.45vw, 4rem);
   --text-h1--line-height: 1.0625;
@@ -15,6 +17,9 @@
   --text-h2: 3.375rem;
   --text-h2--line-height: 3.75rem;
   --text-h2--font-weight: 600;
+  --text-h3: 2.75rem;
+  --text-h3--line-height: 3.375rem;
+  --text-h3--font-weight: 600;
   --text-h4: 2.125rem;
   --text-h4--line-height: 2.625rem;
   --text-h4--font-weight: 600;
@@ -51,6 +56,13 @@
   .animate-fade-in {
     animation: none;
   }
+}
+
+/* I testi divisi in lettere (SplitText) non devono passare il rientro della prima riga a
+   ogni parola: il rientro resta solo sulla prima riga del paragrafo. */
+[data-colore-scorrimento] *,
+[data-reveal="heading"] * {
+  text-indent: 0;
 }
 
 /* --font-bdo-grotesk arriva da next/font/local (layout.tsx). */
