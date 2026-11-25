@@ -4,23 +4,28 @@ import Image from "next/image";
 import { useLayoutEffect, useRef, type CSSProperties } from "react";
 import { TransitionLink } from "@/components/PageTransition";
 import { ArrowCircle, Chip } from "@/components/ui";
-import { brano, ricordi } from "@/content/chi-sono";
+import { nomeBrano, ricordi } from "@/content/chi-sono";
 import { gsap, prefersReducedMotion, ScrollTrigger } from "@/lib/gsap";
 
 /**
  * Dove si ferma ogni card quando è a fuoco: scostamento dal centro (x in vw, y in vh)
  * e larghezza (in vw su desktop, il doppio su mobile). Si ripete se le card sono di più.
+ *
+ * Le card in arrivo sono ancora lontane, quindi in prospettiva stanno vicino al centro:
+ * per non farle finire dietro quella a fuoco si alternano a sinistra e a destra e, in
+ * verticale, seguono lo schema alto, basso, basso, alto. Con questi valori, mentre una
+ * card è a fuoco, le due successive restano visibili quasi per intero (calcolato a
+ * 1440×900) e i bordi non risultano allineati.
  */
 const LAYOUT = [
-  { x: 0, y: -2, w: 30 },
-  { x: -27, y: -14, w: 19 },
-  { x: 25, y: 10, w: 22 },
-  { x: -22, y: 15, w: 14 },
-  { x: 30, y: -17, w: 12 },
-  { x: -8, y: -6, w: 26 },
-  { x: 22, y: -4, w: 20 },
-  { x: -30, y: 2, w: 18 },
-  { x: 10, y: 12, w: 24 },
+  { x: -6, y: -13, w: 26 },
+  { x: 26, y: 13, w: 20 },
+  { x: -30, y: 22, w: 17 },
+  { x: 28, y: -17, w: 16 },
+  { x: -20, y: -14, w: 24 },
+  { x: 25, y: 15, w: 21 },
+  { x: -30, y: 17, w: 16 },
+  { x: 22, y: -13, w: 23 },
 ];
 
 /** Profondità di partenza (lontanissima) e di uscita (ha superato lo schermo), in px. */
@@ -39,18 +44,22 @@ const SCROLL_PER_CARD = 0.9;
  * Sezione "ricordi" di Chi sono: si blocca sullo schermo mentre le card arrivano dal fondo
  * verso chi guarda, sfocate da lontano e nitide quando sono a fuoco. Intanto l'anno in
  * basso scorre dal 1991 a oggi, passando per gli anni intermedi, e coincide con l'anno
- * della card a fuoco.
+ * della card a fuoco, e nella barra compare il brano di quella card.
  */
 export function Ricordi() {
   const sectionRef = useRef<HTMLElement>(null);
   const trackRef = useRef<HTMLDivElement>(null);
   const yearRef = useRef<HTMLSpanElement>(null);
+  const songRef = useRef<HTMLSpanElement>(null);
+  const playRef = useRef<HTMLButtonElement>(null);
 
   useLayoutEffect(() => {
     const section = sectionRef.current;
     const track = trackRef.current;
     const year = yearRef.current;
-    if (!section || !track || !year || ricordi.length === 0) return;
+    const song = songRef.current;
+    const play = playRef.current;
+    if (!section || !track || !year || !song || !play || ricordi.length === 0) return;
 
     const currentYear = new Date().getFullYear();
     const years = ricordi.map((ricordo) => ricordo.anno ?? currentYear);
@@ -64,7 +73,8 @@ export function Ricordi() {
 
       cards.forEach((card, i) => {
         const at = i * SPACING;
-        gsap.set(card, { xPercent: -50, yPercent: -50, z: Z_FAR, autoAlpha: 0, filter: "blur(16px)" });
+        // Le card che arrivano dopo sono sempre più lontane: devono stare dietro le precedenti.
+        gsap.set(card, { xPercent: -50, yPercent: -50, z: Z_FAR, autoAlpha: 0, filter: "blur(16px)", zIndex: cards.length - i });
         // Si avvicina rallentando e diventa nitida prima di arrivare a fuoco; resta nitida
         // anche nella prima metà dell'uscita, poi si sfoca e sparisce oltre lo schermo.
         const passHalf = at + APPROACH + PASS * 0.5;
@@ -79,6 +89,18 @@ export function Ricordi() {
 
       const moveYear = gsap.quickSetter(year, "x", "px");
       let shownYear = "";
+      let shownSong = -1;
+
+      // Brano della card a fuoco (la più vicina al suo momento di fuoco): quando cambia,
+      // il nome nuovo entra dal basso.
+      const showSong = (index: number, animate: boolean) => {
+        if (index === shownSong) return;
+        shownSong = index;
+        const nome = nomeBrano(ricordi[index].brano);
+        song.textContent = nome;
+        play.setAttribute("aria-label", `Riproduci ${nome}`);
+        if (animate) gsap.fromTo(song, { yPercent: 100 }, { yPercent: 0, duration: 0.5, overwrite: true });
+      };
 
       const render = (progress: number) => {
         const time = first + progress * (last - first);
@@ -97,6 +119,9 @@ export function Ricordi() {
           year.textContent = shownYear;
         }
         moveYear(progress * (track.clientWidth - year.offsetWidth));
+
+        const current = gsap.utils.clamp(0, ricordi.length - 1, Math.round((time - first) / SPACING));
+        showSong(current, shownSong !== -1);
       };
 
       render(0);
@@ -147,15 +172,19 @@ export function Ricordi() {
         <div className="flex items-center gap-5 justify-self-start">
           {/* Lettore musicale: in attesa del brano vero, il pulsante non fa nulla. */}
           <button
+            ref={playRef}
             type="button"
             disabled
-            aria-label={`Riproduci ${brano.artista} — ${brano.titolo}`}
+            aria-label={`Riproduci ${nomeBrano(ricordi[0].brano)}`}
             className="shrink-0"
           >
             <Image src="/icons/play.svg" alt="" width={45} height={45} unoptimized />
           </button>
-          <span className="hidden lg:inline">
-            {brano.artista} — {brano.titolo}
+          {/* Brano della card a fuoco; cambia mentre si scorre (vedi showSong). */}
+          <span className="hidden overflow-hidden lg:block">
+            <span ref={songRef} className="block">
+              {nomeBrano(ricordi[0].brano)}
+            </span>
           </span>
         </div>
 

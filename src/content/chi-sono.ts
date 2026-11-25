@@ -19,25 +19,24 @@ export const percorso: TappaPercorso[] = [
 /**
  * Le card che "vengono verso lo schermo". Ognuna ha un anno: mentre la card arriva a fuoco,
  * il contatore in basso scorre fino a quell'anno. `anno: null` = oggi.
- * ESEMPIO: da sostituire con le foto e gli anni veri (aggiungere `immagine` quando arrivano).
+ * Ogni card ha il suo brano: nella barra in basso compare quello della card a fuoco.
+ * ESEMPIO: da sostituire con le foto, gli anni e i brani veri (aggiungere `immagine` e, per
+ * il brano, `artista` e il file audio quando arrivano).
  */
-export type Ricordo = { anno: number | null; didascalia: string };
+export type Brano = { artista?: string; titolo: string };
+export type Ricordo = { anno: number | null; didascalia: string; brano: Brano };
 
-export const ricordi: Ricordo[] = [
-  { anno: 1991, didascalia: "Esempio 1991" },
-  { anno: 1993, didascalia: "Esempio 1993" },
-  { anno: 1996, didascalia: "Esempio 1996" },
-  { anno: 1999, didascalia: "Esempio 1999" },
-  { anno: 2003, didascalia: "Esempio 2003" },
-  { anno: 2008, didascalia: "Esempio 2008" },
-  { anno: 2012, didascalia: "Esempio 2012" },
-  { anno: 2017, didascalia: "Esempio 2017" },
-  { anno: 2021, didascalia: "Esempio 2021" },
-  { anno: null, didascalia: "Esempio oggi" },
-];
+const esempio = (anno: number | null): Ricordo => {
+  const etichetta = anno ?? "oggi";
+  return { anno, didascalia: `Esempio ${etichetta}`, brano: { titolo: `Nome del brano ${etichetta}` } };
+};
 
-/** Brano del lettore nella barra in basso (segnaposto di Figma, audio non ancora collegato). */
-export const brano = { artista: "Nome artista", titolo: "Nome del brano" };
+export const ricordi: Ricordo[] = [1991, 1993, 1996, 1999, 2003, 2008, 2012, 2017, 2021, null].map(esempio);
+
+/** Testo del brano come compare nella barra: "Artista — Titolo", o solo il titolo. */
+export function nomeBrano(brano: Brano) {
+  return brano.artista ? `${brano.artista} — ${brano.titolo}` : brano.titolo;
+}
 
 export const introduzione =
   "Lorem ipsum dolor sit amet sunto consectetuer adipiscing elit lommodo ligula eget dolor. Aenean massa cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mu rutrum etiam ultricies nisi vel augue. Curabitur est ullamcorper ultricies nisi. Nam eget dui";
