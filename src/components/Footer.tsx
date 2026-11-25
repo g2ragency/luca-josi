@@ -72,7 +72,7 @@ export function Footer() {
           src="/brand/logo-luca-josi-bianco.svg"
           alt="Luca Josi"
           width={1344}
-          height={229}
+          height={252}
           unoptimized
           className="h-auto w-full"
         />

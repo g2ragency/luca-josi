@@ -13,7 +13,7 @@ export function Header() {
   return (
     <header className="absolute inset-x-0 top-0 z-10 grid grid-cols-[1fr_auto_1fr] items-center px-4 pt-[15px] text-button md:px-12">
       <TransitionLink href="/" className="justify-self-start" aria-label="Luca Josi, home">
-        <Image src="/brand/logo-luca-josi.svg" alt="Luca Josi" width={130} height={22} priority unoptimized />
+        <Image src="/brand/logo-luca-josi.svg" alt="Luca Josi" width={130} height={24} priority unoptimized className="h-auto w-[130px]" />
       </TransitionLink>
 
       {/* La versione mobile del menu non è ancora disegnata: per ora sotto i 768px restano logo e Contatti. */}
