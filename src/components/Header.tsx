@@ -27,7 +27,7 @@ const PAD_DX = 6;
  * Navbar fissa in alto. In cima alla pagina: logo esteso a sinistra, menu al centro,
  * Contatti a destra. Appena si scorre (come su symbolstudio.pl) logo e Contatti scivolano
  * verso il centro e dietro compare una pillola nera che li raccoglie con il menu (logo e
- * menu diventano bianchi, Contatti grigio scuro per staccarsi dal nero); il logo
+ * menu diventano bianchi, Contatti bianco con testo nero, grigio al passaggio); il logo
  * intanto si stringe nelle iniziali "LJ" ("uca" e "osi" svaniscono e la J raggiunge la L).
  * Tornando in cima si riapre. Le voci del menu hanno la stessa animazione dei pulsanti
  * (scritta che rotola), senza sfondo.
@@ -181,7 +181,7 @@ export function Header() {
         <TransitionLink
           data-nav-contatti
           href="/contatti"
-          className={`pointer-events-auto col-start-3 justify-self-end ${classePulsante} group-data-[compatta=true]/nav:bg-grey-scuro group-data-[compatta=true]/nav:hover:bg-[#4d4d4d]`}
+          className={`pointer-events-auto col-start-3 justify-self-end ${classePulsante} group-data-[compatta=true]/nav:bg-white group-data-[compatta=true]/nav:text-black group-data-[compatta=true]/nav:hover:bg-grey`}
         >
           <TestoPulsante>Contatti</TestoPulsante>
         </TransitionLink>
