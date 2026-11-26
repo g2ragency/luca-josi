@@ -10,17 +10,16 @@ export const metadata: Metadata = { title: "Chi sono" };
 export default function ChiSono() {
   return (
     <>
-      {/* Apertura alta quanto lo schermo: titolo in alto, tappe del percorso in fondo, poi
-          subito sotto i ricordi. Se lo schermo è basso, il contenuto allunga l'apertura. */}
-      <section className="flex min-h-svh flex-col pb-16 md:pb-[72px]">
-        <PageTitle>
-          Qui inserire il titolo della pagina chi sono dove si ripercorre la vita e la carriera di
-          Luca Josi
-        </PageTitle>
-        <Percorso className="mt-auto pt-16 md:pt-[100px]" />
-      </section>
+      <PageTitle>
+        Qui inserire il titolo della pagina chi sono dove si ripercorre la vita e la carriera di
+        Luca Josi
+      </PageTitle>
 
-      <Ricordi />
+      <Percorso />
+
+      <div className="mt-16 md:mt-[72px]">
+        <Ricordi />
+      </div>
 
       <p
         data-colore-scorrimento
