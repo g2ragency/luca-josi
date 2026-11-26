@@ -21,15 +21,15 @@ export const percorso: TappaPercorso[] = [
  * il contatore in basso scorre fino a quell'anno. `anno: null` = oggi.
  * Ogni card ha foto, titolo e anno (Figma: anno e titolo compaiono al passaggio del mouse)
  * e il suo brano: nella barra in basso compare quello della card a fuoco.
- * ESEMPIO: solo il 1998 ha la foto e il titolo di Figma; le altre sono segnaposto da
- * sostituire e per ora usano la stessa foto, così si vede il risultato finale (sostituire
+ * ESEMPIO: solo il 1998 ha il titolo di Figma; le altre sono segnaposto da sostituire.
+ * Per ora tutte le card usano la stessa foto, così si vede il risultato finale (sostituire
  * `immagine`, il `titolo` vero e, per il brano, `artista` e audio).
  */
 export type Brano = { artista?: string; titolo: string };
 export type Ricordo = { anno: number | null; titolo: string; immagine?: string; brano: Brano };
 
-/** Foto provvisoria per tutte le card di esempio (l'unica vera per ora, quella del 1998). */
-const FOTO_PROVVISORIA = "/chi-sono/ricordi/1998.jpg";
+/** Foto provvisoria per tutte le card (Hotel Raphaël), finché non arrivano quelle di ogni ricordo. */
+const FOTO_PROVVISORIA = "/chi-sono/ricordi/hotel-raphael.jpg";
 
 const esempio = (anno: number | null): Ricordo => {
   const etichetta = anno ?? "oggi";
@@ -46,7 +46,8 @@ export const ricordi: Ricordo[] = [
   {
     anno: 1998,
     titolo: "Qui inserire un titolo lungo descrittivo della fotografia",
-    immagine: "/chi-sono/ricordi/1998.jpg",
+    // Foto di Figma per il 1998: /chi-sono/ricordi/1998.jpg (per ora tutte le card usano la stessa).
+    immagine: FOTO_PROVVISORIA,
     brano: { titolo: "Nome del brano 1998" },
   },
   ...[1999, 2003, 2008, 2012, 2017, 2021, null].map(esempio),
