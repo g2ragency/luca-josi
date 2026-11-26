@@ -22,14 +22,23 @@ export const percorso: TappaPercorso[] = [
  * Ogni card ha foto, titolo e anno (Figma: anno e titolo compaiono al passaggio del mouse)
  * e il suo brano: nella barra in basso compare quello della card a fuoco.
  * ESEMPIO: solo il 1998 ha la foto e il titolo di Figma; le altre sono segnaposto da
- * sostituire (aggiungere `immagine`, il `titolo` vero e, per il brano, `artista` e audio).
+ * sostituire e per ora usano la stessa foto, così si vede il risultato finale (sostituire
+ * `immagine`, il `titolo` vero e, per il brano, `artista` e audio).
  */
 export type Brano = { artista?: string; titolo: string };
 export type Ricordo = { anno: number | null; titolo: string; immagine?: string; brano: Brano };
 
+/** Foto provvisoria per tutte le card di esempio (l'unica vera per ora, quella del 1998). */
+const FOTO_PROVVISORIA = "/chi-sono/ricordi/1998.jpg";
+
 const esempio = (anno: number | null): Ricordo => {
   const etichetta = anno ?? "oggi";
-  return { anno, titolo: `Esempio ${etichetta}`, brano: { titolo: `Nome del brano ${etichetta}` } };
+  return {
+    anno,
+    titolo: `Esempio ${etichetta}`,
+    immagine: FOTO_PROVVISORIA,
+    brano: { titolo: `Nome del brano ${etichetta}` },
+  };
 };
 
 export const ricordi: Ricordo[] = [
