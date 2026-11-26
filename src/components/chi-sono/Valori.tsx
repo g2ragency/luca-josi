@@ -5,10 +5,14 @@ import { Etichetta } from "@/components/ui";
 import { valori, type Valore } from "@/content/chi-sono";
 import { gsap, ScrollTrigger } from "@/lib/gsap";
 
-/** Distanza dall'alto dello schermo a cui si ferma il primo valore (px). */
-const STACK_TOP = 48;
-/** Di quanto ogni valore si ferma più in basso del precedente: è anche l'altezza della striscia che resta visibile. */
-const STACK_STEP = 60;
+/** Distanza dall'alto dello schermo a cui si ferma il primo valore (px): sotto la navbar fissa (pillola alta fino a 66px). */
+const STACK_TOP = 90;
+/**
+ * Di quanto ogni valore si ferma più in basso del precedente: è anche l'altezza della
+ * striscia che resta visibile. Figma: 89px, cioè 34px sopra l'etichetta, l'etichetta (21px)
+ * e 34px sotto, così la striscia chiusa ha lo stesso spazio sopra e sotto.
+ */
+const STACK_STEP = 89;
 /** Altezza di un valore in Figma (da linea a linea); diventa più alta se un testo non ci sta. */
 const DEFAULT_CARD_HEIGHT = 363;
 const PADDING_TOP = 34;
@@ -39,7 +43,7 @@ function Contenuto({ valore, numero }: { valore: Valore; numero: number }) {
 
 /**
  * Elenco dei valori con l'effetto "carte impilate" (riferimento: lamalama.com/about-us,
- * sezione core values). Su desktop ogni valore si ferma in alto, 60px sotto il precedente;
+ * sezione core values). Su desktop ogni valore si ferma in alto, 89px sotto il precedente;
  * mentre arriva, la linea in cima si riempie di nero e il valore sopra si richiude fino a
  * lasciare visibile solo la sua striscia (linea, etichetta, numero). Quando sono impilati
  * tutti, scorrono via insieme.

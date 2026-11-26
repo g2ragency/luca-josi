@@ -6,8 +6,8 @@ import { classePulsante, TestoPulsante } from "@/components/ui";
 import type { Articolo } from "@/content/articoli";
 import { gsap, ScrollTrigger } from "@/lib/gsap";
 
-/** Distanza dall'alto dello schermo a cui si ferma il primo articolo (px). */
-const IN_ALTO = 48;
+/** Distanza dall'alto dello schermo a cui si ferma il primo articolo (px): sotto la navbar fissa (pillola alta fino a 66px). */
+const IN_ALTO = 90;
 /** Altezza della striscia di un articolo chiuso (Figma, "Group 7"): anche il passo della pila. */
 const STRISCIA = 110;
 /** Altezza di un articolo aperto in Figma (da linea a linea); cresce se un testo non ci sta. */
