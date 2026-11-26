@@ -19,19 +19,29 @@ export const percorso: TappaPercorso[] = [
 /**
  * Le card che "vengono verso lo schermo". Ognuna ha un anno: mentre la card arriva a fuoco,
  * il contatore in basso scorre fino a quell'anno. `anno: null` = oggi.
- * Ogni card ha il suo brano: nella barra in basso compare quello della card a fuoco.
- * ESEMPIO: da sostituire con le foto, gli anni e i brani veri (aggiungere `immagine` e, per
- * il brano, `artista` e il file audio quando arrivano).
+ * Ogni card ha foto, titolo e anno (Figma: anno e titolo compaiono al passaggio del mouse)
+ * e il suo brano: nella barra in basso compare quello della card a fuoco.
+ * ESEMPIO: solo il 1998 ha la foto e il titolo di Figma; le altre sono segnaposto da
+ * sostituire (aggiungere `immagine`, il `titolo` vero e, per il brano, `artista` e audio).
  */
 export type Brano = { artista?: string; titolo: string };
-export type Ricordo = { anno: number | null; didascalia: string; brano: Brano };
+export type Ricordo = { anno: number | null; titolo: string; immagine?: string; brano: Brano };
 
 const esempio = (anno: number | null): Ricordo => {
   const etichetta = anno ?? "oggi";
-  return { anno, didascalia: `Esempio ${etichetta}`, brano: { titolo: `Nome del brano ${etichetta}` } };
+  return { anno, titolo: `Esempio ${etichetta}`, brano: { titolo: `Nome del brano ${etichetta}` } };
 };
 
-export const ricordi: Ricordo[] = [1991, 1993, 1996, 1999, 2003, 2008, 2012, 2017, 2021, null].map(esempio);
+export const ricordi: Ricordo[] = [
+  ...[1991, 1993, 1996].map(esempio),
+  {
+    anno: 1998,
+    titolo: "Qui inserire un titolo lungo descrittivo della fotografia",
+    immagine: "/chi-sono/ricordi/1998.jpg",
+    brano: { titolo: "Nome del brano 1998" },
+  },
+  ...[1999, 2003, 2008, 2012, 2017, 2021, null].map(esempio),
+];
 
 /** Testo del brano come compare nella barra: "Artista — Titolo", o solo il titolo. */
 export function nomeBrano(brano: Brano) {

@@ -4,7 +4,7 @@ import Image from "next/image";
 import { useLayoutEffect, useRef, type CSSProperties } from "react";
 import { TransitionLink } from "@/components/PageTransition";
 import { ArrowCircle, Chip } from "@/components/ui";
-import { nomeBrano, ricordi } from "@/content/chi-sono";
+import { nomeBrano, ricordi, type Ricordo } from "@/content/chi-sono";
 import { gsap, prefersReducedMotion, ScrollTrigger } from "@/lib/gsap";
 import { getLenis } from "@/lib/smooth-scroll";
 
@@ -22,7 +22,7 @@ const LAYOUT = [
   { x: -6, y: -13, w: 26 },
   { x: 26, y: 13, w: 20 },
   { x: -30, y: 22, w: 17 },
-  { x: 28, y: -17, w: 16 },
+  { x: 26, y: -16, w: 25 },
   { x: -20, y: -14, w: 24 },
   { x: 25, y: 15, w: 21 },
   { x: -30, y: 17, w: 16 },
@@ -40,6 +40,36 @@ const SPACING = 0.33;
 const SHARP_FROM = 0.8;
 /** Quanto si scorre (in altezze dello schermo) per passare da una card alla successiva. */
 const SCROLL_PER_CARD = 0.9;
+
+/**
+ * Card di un ricordo (Figma, frame CHI SONO, "image 23"): foto 4:3 scurita da due veli
+ * (nero al 20% e sfumatura dal trasparente al 70% di nero verso il basso). Anno e titolo,
+ * in basso a sinistra, compaiono solo al passaggio del mouse; dove il mouse non c'è
+ * (telefoni) restano sempre visibili. Le misure sono in proporzione alla larghezza della
+ * card (cqw): a 432px sono quelle di Figma (margini 20px e 15px, anno 14px, titolo 24/30).
+ */
+function Card({ ricordo, style }: { ricordo: Ricordo; style: CSSProperties }) {
+  const anno = ricordo.anno ?? "Oggi";
+  return (
+    <div
+      data-card
+      style={style}
+      className="group/ricordo invisible absolute aspect-[4/3] w-[calc(var(--w)*2vw)] overflow-hidden rounded-[5px] bg-grey/87 will-change-[transform,filter] [container-type:inline-size] md:w-[calc(var(--w)*1vw)]"
+    >
+      {ricordo.immagine && (
+        <Image src={ricordo.immagine} alt="" fill sizes="(min-width: 768px) 30vw, 60vw" className="object-cover" />
+      )}
+      <div
+        aria-hidden="true"
+        className="absolute inset-0 bg-[linear-gradient(180deg,rgb(0_0_0/0)_0%,rgb(0_0_0/0.7)_100%),linear-gradient(rgb(0_0_0/0.2),rgb(0_0_0/0.2))]"
+      />
+      <div className="absolute right-[4.63cqw] bottom-[3.47cqw] left-[4.63cqw] translate-y-[2cqw] text-white opacity-0 transition-[opacity,translate] duration-500 ease-[cubic-bezier(0.625,0.05,0,1)] group-hover/ricordo:translate-y-0 group-hover/ricordo:opacity-100 [@media(hover:none)]:translate-y-0 [@media(hover:none)]:opacity-100">
+        <p className="text-[max(11px,3.24cqw)] leading-[1.5] font-bold">{anno}</p>
+        <p className="mt-[1.39cqw] max-w-[90.3%] text-[max(13px,5.56cqw)] leading-[1.25] font-semibold">{ricordo.titolo}</p>
+      </div>
+    </div>
+  );
+}
 
 /**
  * Sezione "ricordi" di Chi sono: si blocca sullo schermo mentre le card arrivano dal fondo
@@ -225,10 +255,9 @@ export function Ricordi() {
         {ricordi.map((ricordo, i) => {
           const layout = LAYOUT[i % LAYOUT.length];
           return (
-            <div
+            <Card
               key={`${ricordo.anno ?? "oggi"}-${i}`}
-              data-card
-              className="invisible absolute flex aspect-[4/3] w-[calc(var(--w)*2vw)] items-center justify-center rounded-[5px] bg-grey/87 text-button text-grey-testi will-change-[transform,filter] md:w-[calc(var(--w)*1vw)]"
+              ricordo={ricordo}
               style={
                 {
                   left: `calc(50% + ${layout.x}vw)`,
@@ -236,9 +265,7 @@ export function Ricordi() {
                   "--w": layout.w,
                 } as CSSProperties
               }
-            >
-              {ricordo.didascalia}
-            </div>
+            />
           );
         })}
       </div>
