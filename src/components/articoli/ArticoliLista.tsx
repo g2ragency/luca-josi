@@ -12,9 +12,13 @@ const IN_ALTO = 90;
 const STRISCIA = 110;
 /** Altezza di un articolo aperto in Figma (da linea a linea); cresce se un testo non ci sta. */
 const ALTEZZA_MINIMA = 352;
-/** Il titolo passa da 34px (h4) a 24px (h5) e sale da 67px a 35px dalla linea. */
-const SCALA_TITOLO = 24 / 34;
-const SALITA_TITOLO = -32;
+/**
+ * Il titolo chiudendosi passa da 34/42px (h4) a 24/30px (h5), sale da 67px a 37px dalla
+ * linea (centrato nella striscia, come il pulsante) e si allarga fino al pulsante a destra.
+ */
+const SALITA_TITOLO = -30;
+/** Spazio a destra del titolo nella striscia: pulsante "Leggi di più" più 45px di distanza. */
+const SPAZIO_PULSANTE = 181;
 /** Spazio minimo tra l'articolo aperto e il fondo dello schermo mentre la pila è ferma. */
 const MARGINE_BASSO = 24;
 
@@ -38,7 +42,7 @@ function Riga({ articolo }: { articolo: Articolo }) {
             {articolo.categoria}
           </p>
           {/* Il titolo è il link per tastiera e lettori di schermo; i pulsanti servono al mouse. */}
-          <h2 data-titolo className="mt-[9px] max-w-[432px] origin-top-left text-h4">
+          <h2 data-titolo className="mt-[9px] max-w-[432px] text-h4">
             <TransitionLink href={href}>{articolo.titolo}</TransitionLink>
           </h2>
           <TransitionLink
@@ -55,17 +59,7 @@ function Riga({ articolo }: { articolo: Articolo }) {
           {articolo.estratto}
         </p>
       </div>
-      {/* Striscia dell'articolo chiuso: titolo su una riga (con i puntini se non ci sta) e
-          pulsante a destra. Compaiono solo nella pila su desktop. */}
-      <TransitionLink
-        data-titolo-chiuso
-        href={href}
-        aria-hidden="true"
-        tabIndex={-1}
-        className="invisible absolute top-[35px] right-[181px] left-0 truncate text-h5 opacity-0"
-      >
-        {articolo.titolo}
-      </TransitionLink>
+      {/* Pulsante a destra della striscia quando l'articolo è chiuso (solo nella pila su desktop). */}
       <TransitionLink
         data-leggi-chiuso
         href={href}
@@ -151,20 +145,37 @@ export function ArticoliLista({ articoli, animazione = "" }: { articoli: Articol
           gsap.set(root, { height: altezzaPalco + durata });
         };
 
-        // Chiusura di ogni articolo, da 0 (aperto) a 1 (striscia).
-        const chiusure = cards.map((card) =>
-          gsap
+        // Chiusura di ogni articolo, da 0 (aperto) a 1 (striscia). Il titolo è uno solo: si
+        // rimpicciolisce e si allarga fino alla striscia (le misure dipendono dalla larghezza,
+        // quindi si ricalcolano a ogni ridimensionamento con invalidate()).
+        const chiusure = cards.map((card) => {
+          const titolo = card.querySelector<HTMLElement>("[data-titolo]");
+          return gsap
             .timeline({ paused: true, defaults: { ease: "none" } })
             .to(card.querySelector("[data-etichetta]"), { autoAlpha: 0, duration: 0.4 }, 0)
-            .to(card.querySelector("[data-estratto]"), { autoAlpha: 0, duration: 0.6 }, 0)
-            // Il titolo rimpicciolisce fino alla misura della striscia, poi lascia il posto
-            // alla copia su una riga (identica se il titolo è corto).
-            .to(card.querySelector("[data-titolo]"), { scale: SCALA_TITOLO, y: SALITA_TITOLO, duration: 1 }, 0)
-            .to(card.querySelector("[data-titolo]"), { autoAlpha: 0, duration: 0.25 }, 0.75)
-            .fromTo(card.querySelector("[data-titolo-chiuso]"), { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.25 }, 0.75)
+            .to(card.querySelector("[data-estratto]"), { autoAlpha: 0, duration: 0.35 }, 0)
+            .fromTo(
+              titolo,
+              {
+                fontSize: 34,
+                lineHeight: "42px",
+                y: 0,
+                maxWidth: "none",
+                width: () => Math.min(432, titolo?.parentElement?.clientWidth ?? 432),
+              },
+              {
+                fontSize: 24,
+                lineHeight: "30px",
+                y: SALITA_TITOLO,
+                maxWidth: "none",
+                width: () => card.clientWidth - SPAZIO_PULSANTE,
+                duration: 1,
+              },
+              0,
+            )
             .to(card.querySelector("[data-leggi]"), { autoAlpha: 0, duration: 0.4 }, 0)
-            .fromTo(card.querySelector("[data-leggi-chiuso]"), { autoAlpha: 0, x: -24 }, { autoAlpha: 1, x: 0, duration: 0.4 }, 0.6),
-        );
+            .fromTo(card.querySelector("[data-leggi-chiuso]"), { autoAlpha: 0, x: -24 }, { autoAlpha: 1, x: 0, duration: 0.4 }, 0.6);
+        });
         const posizioni = cards.map((card) => gsap.quickSetter(card, "y", "px"));
 
         /** Dispone gli articoli dopo `t` px di scorrimento a lista ferma. */
@@ -186,6 +197,9 @@ export function ArticoliLista({ articoli, animazione = "" }: { articoli: Articol
         misura();
         aggiorna(0);
         ScrollTrigger.addEventListener("refreshInit", misura);
+        // Larghezze del titolo da ricalcolare quando cambia lo schermo.
+        const invalida = () => chiusure.forEach((chiusura) => chiusura.invalidate());
+        ScrollTrigger.addEventListener("refreshInit", invalida);
 
         ScrollTrigger.create({
           trigger: root,
@@ -206,7 +220,10 @@ export function ArticoliLista({ articoli, animazione = "" }: { articoli: Articol
           },
         );
 
-        return () => ScrollTrigger.removeEventListener("refreshInit", misura);
+        return () => {
+          ScrollTrigger.removeEventListener("refreshInit", misura);
+          ScrollTrigger.removeEventListener("refreshInit", invalida);
+        };
       },
     );
 
