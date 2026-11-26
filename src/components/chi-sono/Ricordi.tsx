@@ -6,6 +6,7 @@ import { TransitionLink } from "@/components/PageTransition";
 import { ArrowCircle, Chip } from "@/components/ui";
 import { nomeBrano, ricordi } from "@/content/chi-sono";
 import { gsap, prefersReducedMotion, ScrollTrigger } from "@/lib/gsap";
+import { getLenis } from "@/lib/smooth-scroll";
 
 /**
  * Dove si ferma ogni card quando è a fuoco: scostamento dal centro (x in vw, y in vh)
@@ -117,6 +118,7 @@ export function Ricordi() {
         if (String(label) !== shownYear) {
           shownYear = String(label);
           year.textContent = shownYear;
+          track.setAttribute("aria-valuenow", shownYear);
         }
         moveYear(progress * (track.clientWidth - year.offsetWidth));
 
@@ -127,7 +129,7 @@ export function Ricordi() {
       render(0);
       if (prefersReducedMotion() || cards.length < 2) return;
 
-      ScrollTrigger.create({
+      const st = ScrollTrigger.create({
         trigger: section,
         start: "top top",
         end: () => `+=${(cards.length - 1) * window.innerHeight * SCROLL_PER_CARD}`,
@@ -135,6 +137,79 @@ export function Ricordi() {
         invalidateOnRefresh: true,
         onUpdate: (self) => render(self.progress),
       });
+
+      // Barra degli anni trascinabile: spostando l'anno (o cliccando sulla barra) la pagina
+      // scorre al punto corrispondente, quindi card e anno si muovono insieme. Al rilascio
+      // si assesta sulla card più vicina. Da tastiera: frecce per la card precedente/successiva.
+      const ultima = cards.length - 1;
+      const vaiA = (progresso: number, durata = 0) => {
+        const y = st.start + gsap.utils.clamp(0, 1, progresso) * (st.end - st.start);
+        const lenis = getLenis();
+        if (lenis) lenis.scrollTo(y, durata ? { duration: durata } : { immediate: true, force: true });
+        else window.scrollTo({ top: y, behavior: durata ? "smooth" : "instant" });
+      };
+      const progressoDa = (clientX: number, presa: number) => {
+        const r = track.getBoundingClientRect();
+        return (clientX - r.left - presa) / (r.width - year.offsetWidth);
+      };
+      const cardVicina = () => Math.round(st.progress * ultima);
+
+      let presa = 0;
+      let trascina = false;
+      const giu = (e: PointerEvent) => {
+        if (e.button !== 0) return;
+        e.preventDefault();
+        trascina = true;
+        const r = year.getBoundingClientRect();
+        // Presa sull'anno: resta afferrato nello stesso punto; sulla barra: l'anno salta sotto il cursore.
+        presa = e.clientX >= r.left && e.clientX <= r.right ? e.clientX - r.left : year.offsetWidth / 2;
+        track.setPointerCapture(e.pointerId);
+        track.style.cursor = "grabbing";
+        vaiA(progressoDa(e.clientX, presa));
+      };
+      const muovi = (e: PointerEvent) => {
+        if (trascina) vaiA(progressoDa(e.clientX, presa));
+      };
+      const su = (e: PointerEvent) => {
+        if (!trascina) return;
+        trascina = false;
+        if (track.hasPointerCapture(e.pointerId)) track.releasePointerCapture(e.pointerId);
+        track.style.cursor = "";
+        vaiA(cardVicina() / ultima, 0.6);
+      };
+      const tasto = (e: KeyboardEvent) => {
+        const passo = e.key === "ArrowRight" || e.key === "ArrowUp" ? 1 : e.key === "ArrowLeft" || e.key === "ArrowDown" ? -1 : 0;
+        if (!passo) return;
+        e.preventDefault();
+        vaiA(gsap.utils.clamp(0, ultima, cardVicina() + passo) / ultima, 0.6);
+      };
+
+      // Diventa un cursore solo quando funziona (non con "riduci movimento").
+      Object.entries({
+        role: "slider",
+        tabindex: "0",
+        "aria-label": "Anno dei ricordi",
+        "aria-valuemin": String(years[0]),
+        "aria-valuemax": String(years[years.length - 1]),
+        "aria-valuenow": shownYear,
+        "data-trascinabile": "",
+      }).forEach(([nome, valore]) => track.setAttribute(nome, valore));
+      track.addEventListener("pointerdown", giu);
+      track.addEventListener("pointermove", muovi);
+      track.addEventListener("pointerup", su);
+      track.addEventListener("pointercancel", su);
+      track.addEventListener("keydown", tasto);
+
+      return () => {
+        track.removeEventListener("pointerdown", giu);
+        track.removeEventListener("pointermove", muovi);
+        track.removeEventListener("pointerup", su);
+        track.removeEventListener("pointercancel", su);
+        track.removeEventListener("keydown", tasto);
+        ["role", "tabindex", "aria-label", "aria-valuemin", "aria-valuemax", "aria-valuenow", "data-trascinabile"].forEach((nome) =>
+          track.removeAttribute(nome),
+        );
+      };
     }, section);
 
     return () => ctx.revert();
@@ -188,18 +263,26 @@ export function Ricordi() {
           </span>
         </div>
 
-        <div className="flex items-center gap-1" aria-hidden="true">
-          <Chip>1991</Chip>
-          <div ref={trackRef} className="relative flex h-[33px] w-[80px] items-center sm:w-[160px] md:w-[300px]">
+        <div className="flex items-center gap-1">
+          <span aria-hidden="true">
+            <Chip>1991</Chip>
+          </span>
+          <div
+            ref={trackRef}
+            className="relative flex h-[33px] w-[80px] touch-none items-center rounded-[5px] select-none sm:w-[160px] md:w-[300px] data-[trascinabile]:cursor-grab"
+          >
             <div className="h-[14px] w-full bg-[repeating-linear-gradient(to_right,var(--color-grey)_0_1px,transparent_1px_4px)]" />
             <span
               ref={yearRef}
+              aria-hidden="true"
               className="absolute top-0 left-0 rounded-[5px] bg-black px-[14px] py-[6px] text-white tabular-nums"
             >
               {ricordi[0]?.anno ?? "Oggi"}
             </span>
           </div>
-          <Chip>OGGI</Chip>
+          <span aria-hidden="true">
+            <Chip>OGGI</Chip>
+          </span>
         </div>
 
         <TransitionLink
